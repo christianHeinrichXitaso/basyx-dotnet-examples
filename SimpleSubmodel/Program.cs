@@ -43,25 +43,7 @@ namespace SimpleAssetAdministrationShell
             submodelServiceProvider.UseAutoEndpointRegistration(submodelServerSettings.ServerConfig);
             submodelServer.AddBaSyxUI(PageNames.SubmodelServer);
             submodelServer.AddSwagger(Interface.Submodel);
-            _ = submodelServer.RunAsync();
-
-            ServerSettings aasServerSettings = ServerSettings.CreateSettings();
-            aasServerSettings.ServerConfig.Hosting.ContentPath = "Content";
-            aasServerSettings.ServerConfig.Hosting.Environment = "Development";
-            aasServerSettings.ServerConfig.Hosting.Urls.Add("http://+:5080");
-            aasServerSettings.ServerConfig.Hosting.Urls.Add("https://+:5443");
-            aasServerSettings.Miscellaneous.Add("CompanyLogo", "/images/Bosch.png");
-
-            IAssetAdministrationShellServiceProvider serviceProvider = aas.CreateServiceProvider(true);
-            serviceProvider.SubmodelProviderRegistry.RegisterSubmodelServiceProvider(testSubmodel.Identification.Id, submodelServiceProvider);
-            serviceProvider.UseAutoEndpointRegistration(aasServerSettings.ServerConfig);
-
-            AssetAdministrationShellHttpServer aasServer = new AssetAdministrationShellHttpServer(aasServerSettings);
-            aasServer.WebHostBuilder.UseNLog();
-            aasServer.SetServiceProvider(serviceProvider);
-            aasServer.AddBaSyxUI(PageNames.AssetAdministrationShellServer);
-            aasServer.AddSwagger(Interface.AssetAdministrationShell);
-            aasServer.Run();
+            submodelServer.Run();
         }     
     }
 }

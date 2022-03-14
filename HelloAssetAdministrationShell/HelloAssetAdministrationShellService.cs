@@ -37,12 +37,12 @@ namespace HelloAssetAdministrationShell
             helloSubmodelServiceProvider.RegisterMethodCalledHandler("HelloOperation", HelloOperationHandler);
             helloSubmodelServiceProvider.RegisterSubmodelElementHandler("HelloProperty",
                 new SubmodelElementHandler(HelloSubmodelElementGetHandler, HelloSubmodelElementSetHandler));
-            this.RegisterSubmodelServiceProvider("HelloSubmodel", helloSubmodelServiceProvider);
+            this.RegisterSubmodelServiceProvider(AssetAdministrationShell.Submodels["HelloSubmodel"].Identification.Id, helloSubmodelServiceProvider);
 
             assetIdentificationSubmodelProvider = new SubmodelServiceProvider();
             assetIdentificationSubmodelProvider.BindTo(AssetAdministrationShell.Submodels["AssetIdentification"]);
             assetIdentificationSubmodelProvider.UseInMemorySubmodelElementHandler();
-            this.RegisterSubmodelServiceProvider("AssetIdentification", assetIdentificationSubmodelProvider);
+            this.RegisterSubmodelServiceProvider(AssetAdministrationShell.Submodels["AssetIdentification"].Identification.Id, assetIdentificationSubmodelProvider);
         }
 
         private void HelloSubmodelElementSetHandler(ISubmodelElement submodelElement, IValue value)
@@ -112,6 +112,56 @@ namespace HelloAssetAdministrationShell
                 Description = new LangStringSet() { new LangString("en", "This operation does nothing") }
             });
 
+            helloSubmodel.SubmodelElements.Add(new Operation("Calculate")
+            {
+                Description = new LangStringSet()
+                {
+                    new LangString("DE", "Taschenrechner mit simulierter langer Rechenzeit zum Testen von asynchronen Aufrufen"),
+                    new LangString("EN", "Calculator with simulated long-running computing time for testing asynchronous calls")
+                },
+                InputVariables = new OperationVariableSet()
+                {
+                    new Property<string>("Expression")
+                    {
+                        Description = new LangStringSet()
+                        {
+                            new LangString("DE", "Ein mathematischer Ausdruck (z.B. 5*9)"),
+                            new LangString("EN", "A mathematical expression (e.g. 5*9)")
+                        }
+                    },
+                    new Property<int>("ComputingTime")
+                    {
+                        Description = new LangStringSet()
+                        {
+                            new LangString("DE", "Die Bearbeitungszeit in Millisekunden"),
+                            new LangString("EN", "The computation time in milliseconds")
+                        }
+                    }
+                },
+                OutputVariables = new OperationVariableSet()
+                {
+                    new Property<double>("Result")
+                },
+                OnMethodCalled = async (op, inArgs, inOutArgs, outArgs, cancellationToken) =>
+                {
+                    string expression = inArgs["Expression"]?.GetValue<string>();
+                    int? computingTime = inArgs["ComputingTime"]?.GetValue<int>();
+
+                    inOutArgs["HierRein"]?.SetValue("DaWiederRaus");
+
+                    if (computingTime.HasValue)
+                        await Task.Delay(computingTime.Value, cancellationToken);
+
+                    if (cancellationToken.IsCancellationRequested)
+                        return new OperationResult(false, new Message(MessageType.Information, "Cancellation was requested"));
+
+                    double value = CalulcateExpression(expression);
+
+                    outArgs.Add(new Property<double>("Result", value));
+                    return new OperationResult(true);
+                }
+            });
+
             aas.Submodels = new ElementContainer<ISubmodel>();
             aas.Submodels.Add(helloSubmodel);
 
@@ -166,6 +216,16 @@ namespace HelloAssetAdministrationShell
             aas.Submodels.Add(assetIdentificationSubmodel);
 
             return aas;
+        }
+
+        public static double CalulcateExpression(string expression)
+        {
+            string columnName = "Evaluation";
+            System.Data.DataTable dataTable = new System.Data.DataTable();
+            System.Data.DataColumn dataColumn = new System.Data.DataColumn(columnName, typeof(double), expression);
+            dataTable.Columns.Add(dataColumn);
+            dataTable.Rows.Add(0);
+            return (double)(dataTable.Rows[0][columnName]);
         }
     }
 }

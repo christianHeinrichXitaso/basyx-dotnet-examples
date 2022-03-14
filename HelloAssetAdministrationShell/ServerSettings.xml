@@ -6,7 +6,7 @@
       <ContentPath>Content</ContentPath>
       <Urls>
         <Url>http://+:5180</Url>
-        <Url>https://+:5143</Url>
+        <!--<Url>https://+:5143</Url>-->
       </Urls>
     </Hosting>
     <DefaultRoute/>
