@@ -9,23 +9,16 @@
 * 
 *******************************************************************************/
 using BaSyx.AAS.Server.Http;
-using BaSyx.API.Components;
+using BaSyx.API.ServiceProvider;
 using BaSyx.Common.UI;
 using BaSyx.Common.UI.Swagger;
 using BaSyx.Models.Connectivity;
-using BaSyx.Models.Connectivity.Descriptors;
-using BaSyx.Models.Core.AssetAdministrationShell;
-using BaSyx.Models.Core.AssetAdministrationShell.Generics;
-using BaSyx.Models.Core.AssetAdministrationShell.Identification;
-using BaSyx.Models.Core.AssetAdministrationShell.Identification.BaSyx;
-using BaSyx.Models.Core.AssetAdministrationShell.Implementations;
-using BaSyx.Models.Core.Common;
+using BaSyx.Models.AdminShell;
 using BaSyx.Registry.Client.Http;
 using BaSyx.Registry.ReferenceImpl.FileBased;
 using BaSyx.Registry.Server.Http;
 using BaSyx.Submodel.Server.Http;
-using BaSyx.Utils.Settings.Sections;
-using BaSyx.Utils.Settings.Types;
+using BaSyx.Utils.Settings;
 using NLog.Web;
 using System;
 using System.Collections.Generic;

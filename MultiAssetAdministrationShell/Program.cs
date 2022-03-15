@@ -9,17 +9,14 @@
 * 
 *******************************************************************************/
 using BaSyx.AAS.Server.Http;
-using BaSyx.API.Components;
+using BaSyx.API.ServiceProvider;
 using BaSyx.Common.UI;
 using BaSyx.Common.UI.Swagger;
 using BaSyx.Models.Connectivity;
-using BaSyx.Models.Core.AssetAdministrationShell;
-using BaSyx.Models.Core.AssetAdministrationShell.Identification;
-using BaSyx.Models.Core.AssetAdministrationShell.Identification.BaSyx;
-using BaSyx.Models.Core.AssetAdministrationShell.Implementations;
+using BaSyx.Models.AdminShell;
 using BaSyx.Models.Extensions;
 using BaSyx.Utils.ResultHandling;
-using BaSyx.Utils.Settings.Types;
+using BaSyx.Utils.Settings;
 using NLog.Web;
 using System;
 using System.Collections.Generic;

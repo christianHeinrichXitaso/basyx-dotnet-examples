@@ -8,16 +8,10 @@
 *
 * 
 *******************************************************************************/
-using BaSyx.API.Components;
-using BaSyx.Models.Core.AssetAdministrationShell;
-using BaSyx.Models.Core.AssetAdministrationShell.Generics;
-using BaSyx.Models.Core.AssetAdministrationShell.Identification;
-using BaSyx.Models.Core.AssetAdministrationShell.Identification.BaSyx;
-using BaSyx.Models.Core.AssetAdministrationShell.Implementations;
-using BaSyx.Models.Core.AssetAdministrationShell.Semantics;
-using BaSyx.Models.Core.Common;
+using BaSyx.API.ServiceProvider;
+using BaSyx.Models.AdminShell;
 using BaSyx.Models.Extensions;
-using BaSyx.Models.Extensions.Semantics.DataSpecifications;
+using BaSyx.Models.Semantics;
 using BaSyx.Utils.ResultHandling;
 using System.Collections.Generic;
 using System.Threading;
@@ -93,7 +87,7 @@ namespace HelloAssetAdministrationShell
                 SemanticId = new Reference(new GlobalKey(KeyElements.Property, KeyType.IRI, "urn:basys:org.eclipse.basyx:dataElements:HelloProperty:1.0.0"))
             });
 
-            helloSubmodel.SubmodelElements.Add(new File("HelloFile")
+            helloSubmodel.SubmodelElements.Add(new FileElement("HelloFile")
             {
                 Description = new LangStringSet() { new LangString("en", "This is an exemplary file attached to the Asset Administration Shell")},
                 MimeType = "application/pdf",

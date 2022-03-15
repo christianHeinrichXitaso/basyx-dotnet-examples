@@ -9,11 +9,11 @@
 * 
 *******************************************************************************/
 using BaSyx.AAS.Server.Http;
-using BaSyx.API.Components;
+using BaSyx.API.ServiceProvider;
 using BaSyx.Common.UI;
 using BaSyx.Common.UI.Swagger;
 using BaSyx.Discovery.mDNS;
-using BaSyx.Utils.Settings.Types;
+using BaSyx.Utils.Settings;
 using NLog;
 using NLog.Web;
 
