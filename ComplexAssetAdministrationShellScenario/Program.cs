@@ -87,7 +87,7 @@ namespace ComplexAssetAdministrationShellScenario
                 };
 
                 var submodelServiceProvider = submodel.CreateServiceProvider();
-                repositoryService.RegisterSubmodelServiceProvider(submodel.IdShort, submodelServiceProvider);
+                repositoryService.RegisterSubmodelServiceProvider(submodel.Identification.Id, submodelServiceProvider);
             }
 
             List<HttpEndpoint> endpoints = multiServer.Settings.ServerConfig.Hosting.Urls.ConvertAll(c => new HttpEndpoint(c.Replace("+", "127.0.0.1")));
@@ -98,7 +98,7 @@ namespace ComplexAssetAdministrationShellScenario
             {
                 for (int i = 0; i < repositoryService.ServiceDescriptor.SubmodelDescriptors.Count(); i++)
                 {
-                    registryClient.DeleteSubmodelRegistration(new BaSyxShellIdentifier("MultiAAS_" + i, "1.0.0").ToIdentifier().Id, repositoryService.ServiceDescriptor.SubmodelDescriptors[i].IdShort);
+                    registryClient.DeleteSubmodelRegistration(new BaSyxShellIdentifier("MultiAAS_" + i, "1.0.0").ToIdentifier().Id, repositoryService.ServiceDescriptor.SubmodelDescriptors[i].Identification.Id);
                 }
             };
 
@@ -112,10 +112,10 @@ namespace ComplexAssetAdministrationShellScenario
             for (int i = 0; i < repositoryService.ServiceDescriptor.SubmodelDescriptors.Count(); i++)
             {
                 var descriptor = repositoryService.ServiceDescriptor.SubmodelDescriptors[i];
-                registryClient.UpdateSubmodelRegistration(new BaSyxShellIdentifier("MultiAAS_" + i, "1.0.0").ToIdentifier().Id, descriptor.Identification.Id, descriptor);
+                registryClient.CreateSubmodelRegistration(new BaSyxShellIdentifier("MultiAAS_" + i, "1.0.0").ToIdentifier().Id, descriptor);
 
                 if(shell != null)
-                    registryClient.UpdateSubmodelRegistration(shell.Identification.Id, descriptor.Identification.Id, descriptor);
+                    registryClient.CreateSubmodelRegistration(shell.Identification.Id, descriptor);
             }
         }
 
@@ -179,6 +179,15 @@ namespace ComplexAssetAdministrationShellScenario
             repositoryService.UseDefaultEndpointRegistration(endpoints);
 
             multiServer.SetServiceProvider(repositoryService);
+
+            multiServer.ApplicationStarted = () =>
+            {
+                foreach (var aasDescriptor in repositoryService.ServiceDescriptor.AssetAdministrationShellDescriptors)
+                {
+                    registryClient.CreateAssetAdministrationShellRegistration(aasDescriptor);
+                }
+            };
+
             multiServer.ApplicationStopping = () =>
             {
                 foreach (var aasDescriptor in repositoryService.ServiceDescriptor.AssetAdministrationShellDescriptors)
@@ -190,13 +199,7 @@ namespace ComplexAssetAdministrationShellScenario
             multiServer.AddBaSyxUI(PageNames.AssetAdministrationShellRepositoryServer);
             multiServer.AddSwagger(Interface.AssetAdministrationShellRepository);
 
-            _ = multiServer.RunAsync();
-
-            foreach (var aasDescriptor in repositoryService.ServiceDescriptor.AssetAdministrationShellDescriptors)
-            {
-                registryClient.UpdateAssetAdministrationShellRegistration(aasDescriptor.Identification.Id, aasDescriptor);
-            }
-         
+            _ = multiServer.RunAsync();       
         }
 
         private static void LoadSingleShell()
@@ -230,13 +233,21 @@ namespace ComplexAssetAdministrationShellScenario
             AssetAdministrationShellHttpServer aasServer = new AssetAdministrationShellHttpServer(aasServerSettings);
             aasServer.WebHostBuilder.UseNLog();
             aasServer.SetServiceProvider(aasServiceProvider);
-            aasServer.ApplicationStopping = () => { registryClient.DeleteAssetAdministrationShellRegistration(aas.Identification.Id); };
+
+            aasServer.ApplicationStarted = () =>
+            {
+                registryClient.CreateAssetAdministrationShellRegistration(new AssetAdministrationShellDescriptor(aas, aasServiceProvider.ServiceDescriptor.Endpoints));
+                registryClient.CreateSubmodelRegistration(aas.Identification.Id, new SubmodelDescriptor(testSubmodel, submodelServiceProvider.ServiceDescriptor.Endpoints));
+            };
+
+            aasServer.ApplicationStopping = () => 
+            { 
+                registryClient.DeleteAssetAdministrationShellRegistration(aas.Identification.Id); 
+            };
+
             aasServer.AddBaSyxUI(PageNames.AssetAdministrationShellServer);
             aasServer.AddSwagger(Interface.AssetAdministrationShell);
             _ = aasServer.RunAsync();
-
-            registryClient.UpdateAssetAdministrationShellRegistration(aas.Identification.Id, new AssetAdministrationShellDescriptor(aas, aasServiceProvider.ServiceDescriptor.Endpoints));
-            registryClient.UpdateSubmodelRegistration(aas.Identification.Id, testSubmodel.Identification.Id, new SubmodelDescriptor(testSubmodel, submodelServiceProvider.ServiceDescriptor.Endpoints));
         }
 
         private static void LoadRegistry()
