@@ -168,7 +168,7 @@ namespace HelloAssetAdministrationShell
             {
                 SemanticId = new Reference(
                   new GlobalKey(
-                      KeyElements.Property,
+                      KeyElements.ConceptDescription,
                       KeyType.IRDI,
                       "0173-1#02-AAO057#002")),
                 Value = "HelloAsset_ProductType"
@@ -190,11 +190,7 @@ namespace HelloAssetAdministrationShell
 
             var orderNumber = new Property<string>("OrderNumber")
             {
-                SemanticId = new Reference(
-                    new GlobalKey(
-                        KeyElements.Property,
-                        KeyType.IRDI,
-                        "0173-1#02-AAO689#001")),
+                SemanticId = orderNumberCD.CreateReference(),
                 Value = "HelloAsset_OrderNumber",
                 ConceptDescription = orderNumberCD
             };
