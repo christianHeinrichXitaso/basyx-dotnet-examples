@@ -27,7 +27,8 @@
     <ProjectReference Include="..\..\basyx-dotnet-components\BaSyx.Registry.Client.Http\BaSyx.Registry.Client.Http.csproj" />
     <ProjectReference Include="..\..\basyx-dotnet-components\BaSyx.Registry.ReferenceImpl.FileBased\BaSyx.Registry.ReferenceImpl.FileBased.csproj" />
     <ProjectReference Include="..\..\basyx-dotnet-components\BaSyx.Submodel.Server.Http\BaSyx.Submodel.Server.Http.csproj" />
-    <ProjectReference Include="..\..\basyx-dotnet-components\BaSyx.Submodel.Client.Http\BaSyx.Submodel.Client.Http.csproj" />    
+    <ProjectReference Include="..\..\basyx-dotnet-components\BaSyx.Submodel.Client.Http\BaSyx.Submodel.Client.Http.csproj" />
+    <ProjectReference Include="..\..\basyx-dotnet-components\BaSyx.API.Http.Controllers.AASX\BaSyx.API.Http.Controllers.AASX.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="!Exists('..\..\basyx-dotnet-components\')">
@@ -40,6 +41,7 @@
     <PackageReference Include="BaSyx.Registry.ReferenceImpl.FileBased" Version="1.0.0" />
     <PackageReference Include="BaSyx.Submodel.Server.Http" Version="1.0.0" />
     <PackageReference Include="BaSyx.Submodel.Client.Http" Version="1.0.0" />
+    <PackageReference Include="BaSyx.API.Http.Controllers.AASX" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

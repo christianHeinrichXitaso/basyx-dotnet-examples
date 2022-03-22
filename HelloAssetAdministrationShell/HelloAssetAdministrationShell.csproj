@@ -23,6 +23,7 @@
     <ProjectReference Include="..\..\basyx-dotnet-components\BaSyx.Common.UI\BaSyx.Common.UI.csproj" />
     <ProjectReference Include="..\..\basyx-dotnet-components\BaSyx.Common.UI.Swagger\BaSyx.Common.UI.Swagger.csproj" />
     <ProjectReference Include="..\..\basyx-dotnet-components\BaSyx.Discovery.mDNS\BaSyx.Discovery.mDNS.csproj" />
+    <ProjectReference Include="..\..\basyx-dotnet-components\BaSyx.API.Http.Controllers.AASX\BaSyx.API.Http.Controllers.AASX.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="!Exists('..\..\basyx-dotnet-components\')">
@@ -30,8 +31,9 @@
     <PackageReference Include="BaSyx.Common.UI" Version="1.0.0" />
     <PackageReference Include="BaSyx.Common.UI.Swagger" Version="1.0.0" />
     <PackageReference Include="BaSyx.Discovery.mDNS" Version="1.0.0" />
+    <PackageReference Include="BaSyx.API.Http.Controllers.AASX" Version="1.0.0" />
   </ItemGroup>
- 
+
   <ItemGroup>
     <None Update="Content\HelloAssetAdministrationShell.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
