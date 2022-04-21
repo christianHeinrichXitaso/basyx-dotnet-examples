@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: MIT
 *******************************************************************************/
-using BaSyx.AAS.Server.Http;
+using BaSyx.Servers.AdminShell.Http;
 using BaSyx.API.ServiceProvider;
 using BaSyx.Common.UI;
 using BaSyx.Common.UI.Swagger;
@@ -17,7 +17,7 @@ using BaSyx.Models.AdminShell;
 using BaSyx.Registry.Client.Http;
 using BaSyx.Registry.ReferenceImpl.FileBased;
 using BaSyx.Registry.Server.Http;
-using BaSyx.Submodel.Server.Http;
+using BaSyx.Servers.AdminShell.Http;
 using BaSyx.Utils.Settings;
 using NLog.Web;
 using System;
@@ -90,15 +90,14 @@ namespace ComplexAssetAdministrationShellScenario
                 repositoryService.RegisterSubmodelServiceProvider(submodel.Identification.Id, submodelServiceProvider);
             }
 
-            List<HttpEndpoint> endpoints = multiServer.Settings.ServerConfig.Hosting.Urls.ConvertAll(c => new HttpEndpoint(c.Replace("+", "127.0.0.1")));
-            repositoryService.UseDefaultEndpointRegistration(endpoints);
+            repositoryService.UseAutoEndpointRegistration(multiServer.Settings.ServerConfig);
 
             multiServer.SetServiceProvider(repositoryService);
             multiServer.ApplicationStopping = () =>
             {
                 for (int i = 0; i < repositoryService.ServiceDescriptor.SubmodelDescriptors.Count(); i++)
                 {
-                    registryClient.DeleteSubmodelRegistration(new BaSyxShellIdentifier("MultiAAS_" + i, "1.0.0").ToIdentifier().Id, repositoryService.ServiceDescriptor.SubmodelDescriptors[i].Identification.Id);
+                    registryClient.DeleteSubmodelRegistration(new BaSyxShellIdentifier("MultiAAS_" + i, "1.0.0").ToIdentifier().Id, repositoryService.ServiceDescriptor.SubmodelDescriptors.ElementAt(i).Identification.Id);
                 }
             };
 
@@ -111,7 +110,7 @@ namespace ComplexAssetAdministrationShellScenario
             var shell = shells.Entity?.FirstOrDefault();
             for (int i = 0; i < repositoryService.ServiceDescriptor.SubmodelDescriptors.Count(); i++)
             {
-                var descriptor = repositoryService.ServiceDescriptor.SubmodelDescriptors[i];
+                var descriptor = repositoryService.ServiceDescriptor.SubmodelDescriptors.ElementAt(i);
                 registryClient.CreateSubmodelRegistration(new BaSyxShellIdentifier("MultiAAS_" + i, "1.0.0").ToIdentifier().Id, descriptor);
 
                 if(shell != null)
@@ -175,8 +174,7 @@ namespace ComplexAssetAdministrationShellScenario
                 repositoryService.RegisterAssetAdministrationShellServiceProvider(new BaSyxShellIdentifier("MultiAAS_" + i, "1.0.0").ToIdentifier().Id, aasServiceProvider);
             }
 
-            List<HttpEndpoint> endpoints = multiServer.Settings.ServerConfig.Hosting.Urls.ConvertAll(c => new HttpEndpoint(c.Replace("+", "127.0.0.1")));
-            repositoryService.UseDefaultEndpointRegistration(endpoints);
+            repositoryService.UseAutoEndpointRegistration(multiServer.Settings.ServerConfig);
 
             multiServer.SetServiceProvider(repositoryService);
 

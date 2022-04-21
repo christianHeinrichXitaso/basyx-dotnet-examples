@@ -8,12 +8,12 @@
 *
 * SPDX-License-Identifier: MIT
 *******************************************************************************/
-using BaSyx.AAS.Server.Http;
+using BaSyx.Servers.AdminShell.Http;
 using BaSyx.API.ServiceProvider;
 using BaSyx.Common.UI;
 using BaSyx.Common.UI.Swagger;
 using BaSyx.Models.AdminShell;
-using BaSyx.Submodel.Server.Http;
+using BaSyx.Servers.AdminShell.Http;
 using BaSyx.Utils.Settings;
 using NLog.Web;
 using System;

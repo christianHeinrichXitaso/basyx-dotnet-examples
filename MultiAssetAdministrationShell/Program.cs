@@ -8,7 +8,7 @@
 *
 * SPDX-License-Identifier: MIT
 *******************************************************************************/
-using BaSyx.AAS.Server.Http;
+using BaSyx.Servers.AdminShell.Http;
 using BaSyx.API.ServiceProvider;
 using BaSyx.Common.UI;
 using BaSyx.Common.UI.Swagger;
@@ -102,8 +102,7 @@ namespace MultiAssetAdministrationShell
                 repositoryService.RegisterAssetAdministrationShellServiceProvider(aas.Identification.Id, aasServiceProvider);
             }
 
-            List<HttpEndpoint> endpoints = server.Settings.ServerConfig.Hosting.Urls.ConvertAll(c => new HttpEndpoint(c.Replace("+", "127.0.0.1")));
-            repositoryService.UseDefaultEndpointRegistration(endpoints);
+            repositoryService.UseAutoEndpointRegistration(server.Settings.ServerConfig);
 
             server.SetServiceProvider(repositoryService);
 
