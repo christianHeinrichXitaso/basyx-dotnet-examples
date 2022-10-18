@@ -19,12 +19,14 @@ using BaSyx.Utils.ResultHandling;
 using BaSyx.Utils.Settings;
 using NLog.Web;
 using System;
-using System.Collections.Generic;
+using NLog;
+using NLog.Web;
 
 namespace MultiAssetAdministrationShell
 {
     class Program
     {
+
         static void Main(string[] args)
         {
             ServerSettings aasRepositorySettings = ServerSettings.CreateSettings();
@@ -98,8 +100,9 @@ namespace MultiAssetAdministrationShell
                     }
                 });
 
-                var aasServiceProvider = aas.CreateServiceProvider(true);
-                repositoryService.RegisterAssetAdministrationShellServiceProvider(aas.Identification.Id, aasServiceProvider);
+                //var aasServiceProvider = aas.CreateServiceProvider(true);
+                var databaseAssetAdministrationShellServiceProvider = new DatabaseAssetAdministrationShellServiceProvider(aas);
+                repositoryService.RegisterAssetAdministrationShellServiceProvider(aas.Identification.Id, databaseAssetAdministrationShellServiceProvider);
             }
 
             repositoryService.UseAutoEndpointRegistration(server.Settings.ServerConfig);
